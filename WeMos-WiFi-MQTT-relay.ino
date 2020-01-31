@@ -3,6 +3,14 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
+// i'm loading settings from this file
+#include "credentials.h"
+
+// but you can set them here instead
+//const char* ssid = "";
+//const char* password = "";
+//const char* mqtt_server = "";
+
 // Data wire is plugged into pin 2 on the Arduino
 #define ONE_WIRE_BUS 5
 
@@ -11,16 +19,13 @@
 #define IN_PIN 5
 #define RELAY_PIN 4
 
+const char* willTopic = "$CONNECTED/"CLIENT_ID;
+
 // Setup a oneWire instance to communicate with any OneWire devices 
 // (not just Maxim/Dallas temperature ICs)
 OneWire oneWire(ONE_WIRE_BUS);
 
 DallasTemperature sensors(&oneWire);
-
-// Update these with values suitable for your network.
-const char* ssid = "";
-const char* password = "";
-const char* mqtt_server = "";
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -59,10 +64,10 @@ void callback(char* topic, byte* payload, unsigned int length) {
   // Switch on the LED if an 1 was received as first character
   if ((char)payload[0] == '1') {
     digitalWrite(RELAY_PIN, HIGH);
-    client.publish("node/"CLIENT_ID"/relay", "1", TRUE);
+    client.publish("node/"CLIENT_ID"/relay", "1", true);
   } else {
     digitalWrite(RELAY_PIN, LOW);
-    client.publish("node/"CLIENT_ID"/relay", "0", TRUE);
+    client.publish("node/"CLIENT_ID"/relay", "0", true);
   }
 
 }
@@ -73,8 +78,9 @@ void reconnect() {
   while (!client.connected()) {
     Serial.print("Attempting MQTT connection...");
     // Attempt to connect
-    if (client.connect(CLIENT_ID)) {
+    if (client.connect(CLIENT_ID, willTopic, 0, true, "0")) {
       Serial.println("connected");
+      client.publish(willTopic, "1", true);
       client.subscribe("node/"CLIENT_ID"/relay/set");
       digitalWrite(LED_BUILTIN, HIGH);
     } else {
@@ -114,6 +120,6 @@ void loop()
     temp = sensors.getTempCByIndex(0);
     Serial.println(temp);
     
-    client.publish("node/"CLIENT_ID"/sys/temp", String(temp).c_str(), FALSE);
+    client.publish("node/"CLIENT_ID"/sys/temp", String(temp).c_str(), false);
   }
 }
