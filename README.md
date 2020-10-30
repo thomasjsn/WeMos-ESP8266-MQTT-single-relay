@@ -7,7 +7,10 @@ Project documentation available at: https://cavelab.dev/wiki/Relay_for_Home_Assi
 ![Relay for Home Assistant (Wi-Fi and MQTT controlled)](https://cavelab.dev/images/thumb/5/5f/Soldering-wires-to-relay-qerlz4.jpeg/600px-Soldering-wires-to-relay-qerlz4.jpeg)
 
 ## Author
-[Thomas Jensen](https://cavelab.dev)
+**Thomas Jensen**
+* Twitter: [@thomasjsn](https://twitter.com/thomasjsn)
+* Github: [@thomasjsn](https://github.com/thomasjsn)
+* Website: [cavelab.dev](https://cavelab.dev/wiki/User:Thomas)
 
 ---
 _This README was automatically generated using the MediaWiki API_ (`pageid:30`)
